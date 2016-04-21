@@ -68,3 +68,5 @@ target/
 *.mat
 
 convert.py
+
+*.m~

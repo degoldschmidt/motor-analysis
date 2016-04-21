@@ -24,12 +24,25 @@ numFiles = size(names, 1);
 block={'Train','Test','After'};
 
 cd(path_folder)
+counter=1;
 for i=1:numFiles
-    subject{i}=open(names{i});
+    file = load(names{i});
+    x = length(file.Train.TrialDataXYTrain);
+    y = length(file.Test.TrialDataXYTest);
+    z = length(file.After.TrialDataXYAfter);
+    %[names(i) x y z]
+    if (x==101 && y==151 && z==151)
+        ['---> ' names(i) ' added.']
+        subject{counter}=open(names{i});
+        counter = counter + 1;
+    else
+        ['---> ' names(i) ' not added.']
+    end
 end
 
 cd(analysis_folder)
-for i=1:numFiles
+for i=1:(counter-1)
+    
     %Train - block1
     [analysis{i}.(block{1}).TrajsTang, analysis{i}.(block{1}).TargetAngle, analysis{i}.(block{1}).Teach, ...
         analysis{i}.(block{1}).Curl, analysis{i}.(block{1}).ErrAng, analysis{i}.(block{1}).NT, analysis{i}.(block{1}).CutInds,...
