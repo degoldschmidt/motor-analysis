@@ -1,10 +1,14 @@
-function [analysis] = data_grouping( task_version, suffix='')
+function [analysis] = data_grouping( task_version, suffix)
 % data_grouping groups data from same task and formats it to a proper shape
 %  task_version= 'v1';
 %  suffix= 'mycoolsuf'; adds optional suffix to saved file
+if nargin < 2
+    suffix='';
+end
 
 %Path to a folder with all data split in folders called "v1","v2","v3"...
 %path_folder = 'C:\Users\Rodrigo\Documents\INDP2015\Motor Week\Data';
+analysis_folder = pwd
 path_folder = ['..' filesep 'motor-data'];
 path_data = [path_folder filesep task_version, '_*.mat']
 % Gets data files to analyze
@@ -19,11 +23,12 @@ numFiles = size(names, 1);
 
 block={'Train','Test','After'};
 
-cd(path_data)
+cd(path_folder)
 for i=1:numFiles
     subject{i}=open(names{i});
 end
 
+cd(analysis_folder)
 for i=1:numFiles
     %Train - block1
     [analysis{i}.(block{1}).TrajsTang, analysis{i}.(block{1}).TargetAngle, analysis{i}.(block{1}).Teach, ...
@@ -44,6 +49,10 @@ for i=1:numFiles
     analysis{i}.task_version = task_version;
 end
 
+output_folder = [path_folder filesep 'processed-data'];
+if exist(output_folder,'dir')==0
+    mkdir(output_folder);
+end
 save([path_folder filesep 'processed-data' filesep 'analysis_', task_version, '_', suffix, '.mat'],'analysis')
 
 end
