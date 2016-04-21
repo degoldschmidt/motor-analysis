@@ -42,6 +42,7 @@ for i=1:numFiles
     analysis{i}.task_version = task_version;
 end
 
+save([path_folder filesep 'Analysed Data' filesep 'analysis_', task_version, '.mat'],'analysis')
 
 end
 
