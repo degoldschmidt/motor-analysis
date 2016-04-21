@@ -66,3 +66,5 @@ target/
 .pydevproject
 
 *.mat
+
+convert.py

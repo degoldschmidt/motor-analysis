@@ -1,12 +1,13 @@
-function [analysis] = data_grouping( task_version )
+function [analysis] = data_grouping( task_version, suffix)
 % data_grouping groups data from same task and formats it to a proper shape
 %  task_version= 'v1'; 
 
 %Path to a folder with all data split in folders called "v1","v2","v3"...
-path_folder = 'C:\Users\Rodrigo\Documents\INDP2015\Motor Week\Data';
-path_data = [path_folder filesep task_version];
+%path_folder = 'C:\Users\Rodrigo\Documents\INDP2015\Motor Week\Data';
+path_folder = ['..' filesep 'motor-data'];
+path_data = [path_folder filesep task_version, '_*.mat']
 % Gets data files to analyze
-d = dir(path_data);
+d = dir(path_data)
 str = {d.name};
 str = sortrows({d.name}');
 [s,v] = listdlg('PromptString','Select files to group up:', 'OKString', 'OK',...
@@ -42,7 +43,7 @@ for i=1:numFiles
     analysis{i}.task_version = task_version;
 end
 
-save([path_folder filesep 'Analysed Data' filesep 'analysis_', task_version, '.mat'],'analysis')
+save([path_folder filesep 'processed-data' filesep 'analysis_', task_version, '_', suffix, '.mat'],'analysis')
 
 end
 
