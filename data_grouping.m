@@ -1,18 +1,18 @@
-function [analysis] = data_grouping( task_version, suffix)
+function [analysis] = data_grouping( task_version, file_suffix)
 % data_grouping groups data from same task and formats it to a proper shape
 %  task_version= 'v1';
 %  suffix= 'mycoolsuf'; adds optional suffix to saved file
 if nargin < 2
-    suffix='';
+    file_suffix='';
 end
 
 %Path to a folder with all data split in folders called "v1","v2","v3"...
 %path_folder = 'C:\Users\Rodrigo\Documents\INDP2015\Motor Week\Data';
-analysis_folder = pwd
+analysis_folder = pwd;
 path_folder = ['..' filesep 'motor-data'];
-path_data = [path_folder filesep task_version, '_*.mat']
+path_data = [path_folder filesep task_version, '_*.mat'];
 % Gets data files to analyze
-d = dir(path_data)
+d = dir(path_data);
 str = {d.name};
 str = sortrows({d.name}');
 [s,v] = listdlg('PromptString','Select files to group up:', 'OKString', 'OK',...
@@ -24,7 +24,7 @@ numFiles = size(names, 1);
 block={'Train','Test','After'};
 
 cd(path_folder)
-counter=1;
+counter=0;
 for i=1:numFiles
     file = load(names{i});
     x = length(file.Train.TrialDataXYTrain);
@@ -32,16 +32,17 @@ for i=1:numFiles
     z = length(file.After.TrialDataXYAfter);
     %[names(i) x y z]
     if (x==101 && y==151 && z==151)
-        ['---> ' names(i) ' added.']
-        subject{counter}=open(names{i});
+        %['---> ' names(i) ' added.']
         counter = counter + 1;
+        subject{counter}=open(names{i});
     else
-        ['---> ' names(i) ' not added.']
+        %['---> ' names(i) ' not added.']
     end
 end
+[num2str(counter) ' datasets were added. ' num2str(numFiles-counter) ' datasets were not added due to invalid trial numbers.']
 
 cd(analysis_folder)
-for i=1:(counter-1)
+for i=1:counter
     
     %Train - block1
     [analysis{i}.(block{1}).TrajsTang, analysis{i}.(block{1}).TargetAngle, analysis{i}.(block{1}).Teach, ...
@@ -66,7 +67,12 @@ output_folder = [path_folder filesep 'processed-data'];
 if exist(output_folder,'dir')==0
     mkdir(output_folder);
 end
-save([path_folder filesep 'processed-data' filesep 'analysis_', task_version, '_', suffix, '.mat'],'analysis')
+file_suffix = ['_' file_suffix];
+if file_suffix=='_'
+   file_suffix = ''; 
+end
+
+save([path_folder filesep 'processed-data' filesep 'analysis_', task_version, file_suffix, '.mat'],'analysis')
 
 end
 
