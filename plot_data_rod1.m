@@ -17,11 +17,15 @@ function [] = plot_data_rod1( all_analysis,plot_individuals,save_fig )
 %  2-> plot_data_rod1( {analysis_v1, analysis_v2, analysis_v3},1,1 ) - example
 %
 
+block={'Train','Test','After'};
+
+save_path = 'C:\Users\Rodrigo\Documents\INDP2015\Motor Week\Data\motor-data\AngleErrorFigures';
+
 for file=1:length(all_analysis)
     
     analysis=all_analysis{file};
     n_subjects = length(analysis);
-    block={'Train','Test','After'};
+    
     for i=1:3
         angleError.(block{i})=[];
     end
@@ -42,6 +46,11 @@ for file=1:length(all_analysis)
         ylim([-50 50])
     end
     title(h(1),[analysis{1,1}.task_version, ' - n=' ,num2str(n_subjects)]);
+    
+    if save_fig
+        saveas(gcf,[save_path filesep analysis{1,1}.task_version filesep 'mean_angleError_' analysis{1,1}.task_version ],'png')
+        saveas(gcf,[save_path filesep analysis{1,1}.task_version filesep 'mean_angleError_' analysis{1,1}.task_version ],'fig')
+    end
     
     if plot_individuals
     for j=1:3
