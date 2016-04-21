@@ -1,6 +1,7 @@
-function [analysis] = data_grouping( task_version, suffix)
+function [analysis] = data_grouping( task_version, suffix='')
 % data_grouping groups data from same task and formats it to a proper shape
-%  task_version= 'v1'; 
+%  task_version= 'v1';
+%  suffix= 'mycoolsuf'; adds optional suffix to saved file
 
 %Path to a folder with all data split in folders called "v1","v2","v3"...
 %path_folder = 'C:\Users\Rodrigo\Documents\INDP2015\Motor Week\Data';
