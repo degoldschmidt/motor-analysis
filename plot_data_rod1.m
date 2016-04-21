@@ -67,8 +67,8 @@ for file=1:length(all_analysis)
             ylabel('AngleError(º)')
             xlabel('Trials')
             if save_fig
-                saveas(gcf,[save_path filesep analysis{1,1}.task_version filesep 'mean_angleError_' analysis{1,1}.task_version,'_',name{i} ],'png')
-                saveas(gcf,[save_path filesep analysis{1,1}.task_version filesep 'mean_angleError_' analysis{1,1}.task_version,'_',name{i} ],'fig')
+                saveas(gcf,[save_path filesep analysis{1,1}.task_version filesep 'angleError_' analysis{1,1}.task_version,'_',name{i} ],'png')
+                saveas(gcf,[save_path filesep analysis{1,1}.task_version filesep 'angleError_' analysis{1,1}.task_version,'_',name{i} ],'fig')
             end
         end
     end
