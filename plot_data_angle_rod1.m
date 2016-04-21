@@ -36,7 +36,7 @@ for file=1:length(all_analysis)
         angleTarget.(block{i})=[];
             n_trials(i) = length(analysis{1,1}.(block{i}).TargetAngle);
     end
-    
+    trials2plot = {1:n_trials(1); n_trials(1)+1:n_trials(1)+n_trials(2); n_trials(1)+n_trials(2)+1:n_trials(1)+n_trials(2)+n_trials(3)};
     for j=1:3
         for i=1:n_subjects
             angleError.(block{j}) =  cat(2,angleError.(block{j}),analysis{1,i}.(block{j}).ErrAngss);
@@ -85,7 +85,7 @@ for file=1:length(all_analysis)
         hold on
         errorbar(target(1:2:end),meanAbs_angleError.(block{j})(1:2:end),seAbs_angleError.(block{j})(1:2:end),'s-','Color', [0.0 0.667 1.0],'LineWidth',2)
         errorbar(target(2:2:end),meanAbs_angleError.(block{j})(2:2:end),seAbs_angleError.(block{j})(2:2:end),'s-','Color', [1.0 0.667 0.0],'LineWidth',2)
-        ylabel(block{j})
+        ylabel('Mean absolute angle error')
         xlabel('Target Angle (rad)')
     end
     title(h(1),['Mean absolute angle error - ',analysis{1,1}.task_version])
@@ -95,51 +95,60 @@ for file=1:length(all_analysis)
         saveas(gcf,[save_path filesep analysis{1,1}.task_version filesep 'mean_error_perTarget' analysis{1,1}.task_version ],'fig')
     end
     
+    vert_limits = [-70 70];
+    figure
     for j=1:3
-        figure
         for i=1:2:length(target)
             h1(i)=subplot(4,2,i);
             hold on
-            plot( smooth(mean_error_perAngle.(block{j})(:,i)),'Color', [0.0 0.667 1.0],'LineWidth',2)
-            plot([0 length(mean(angleError.(block{j}),2))],[0 0],'--k','LineWidth',0.5)
+            plot(trials2plot{j}, smooth(mean_error_perAngle.(block{j})(:,i)),'Color', [0.0 0.667 1.0],'LineWidth',2)
+            plot([0 trials2plot{3}(end)],[0 0],'--k','LineWidth',0.5)
+            plot([trials2plot{1}(end) trials2plot{1}(end) ],vert_limits,'--k','LineWidth',0.5)
+            plot([trials2plot{2}(end) trials2plot{2}(end) ],vert_limits,'--k','LineWidth',0.5)
             xlabel('Trials')
             ylabel([num2str(target(i)/pi),'\pi'],'FontSize',14)
-            ylim([-70 70])
+            ylim(vert_limits)
         end
         for i=2:2:length(target)
             h2(i)=subplot(4,2,i);
             hold on
-            plot( smooth(mean_error_perAngle.(block{j})(:,i)),'Color', [1.0 0.667 0.0],'LineWidth',2)
-            plot([0 length(mean(angleError.(block{j}),2))],[0 0],'--k','LineWidth',0.5)
+            plot(trials2plot{j}, smooth(mean_error_perAngle.(block{j})(:,i)),'Color', [1.0 0.667 0.0],'LineWidth',2)
+            plot([0 trials2plot{3}(end)],[0 0],'--k','LineWidth',0.5)
+            plot([trials2plot{1}(end) trials2plot{1}(end) ],vert_limits,'--k','LineWidth',0.5)
+            plot([trials2plot{2}(end) trials2plot{2}(end) ],vert_limits,'--k','LineWidth',0.5)
             xlabel('Trials')
             ylabel([num2str(target(i)/pi),'\pi'],'FontSize',14)
-            ylim([-70 70])
+            ylim(vert_limits)
         end
-        title(h1(1),['Cardinal Orientation - ' block{j}])
-        title(h2(2),['Diagonal Orientation - ' block{j}])
+        title(h1(1),['Cardinal Orientation - ',analysis{1,1}.task_version])
+        title(h2(2),['Diagonal Orientation - ',analysis{1,1}.task_version])
         
         if save_fig
-            saveas(gcf,[save_path filesep analysis{1,1}.task_version filesep 'error_perTarget_' analysis{1,1}.task_version,'_',block{j} ],'png')
-            saveas(gcf,[save_path filesep analysis{1,1}.task_version filesep 'error_perTarget_' analysis{1,1}.task_version,'_',block{j} ],'fig')
+            saveas(gcf,[save_path filesep analysis{1,1}.task_version filesep 'error_perTarget_' analysis{1,1}.task_version],'png')
+            saveas(gcf,[save_path filesep analysis{1,1}.task_version filesep 'error_perTarget_' analysis{1,1}.task_version],'fig')
         end
     end
     
-    %plot mean of diag and mean of cardinal 
-     figure
-     for j=1:3
-         h(j)=subplot(3,1,j);
-         hold on
-         plot( smooth(nanmean(mean_error_perAngle.(block{j})(:,1:2:end),2)),'Color', [0.0 0.667 1.0],'LineWidth',2)
-         plot([0 length(mean(angleError.(block{j}),2))],[0 0],'--k','LineWidth',0.5)
-         plot( smooth(nanmean(mean_error_perAngle.(block{j})(:,2:2:end),2)),'Color', [1.0 0.667 0.0],'LineWidth',2)
-         xlabel('Trials')
-         ylabel(['Angle Error - ',block{j}])
-     end
-     title(h(1),[analysis{1,1}.task_version])
-     if save_fig
-         saveas(gcf,[save_path filesep analysis{1,1}.task_version filesep 'meanerror_diagVScard_' analysis{1,1}.task_version ],'png')
-         saveas(gcf,[save_path filesep analysis{1,1}.task_version filesep 'meanerror_diagVScard_' analysis{1,1}.task_version ],'fig')
-     end
+    vert_limits2=[-45 45];
+    %plot mean of diag and mean of cardinal
+    figure
+    for j=1:3
+        %          h(j)=subplot(3,1,j);
+        hold on
+        plot(trials2plot{j}, smooth(nanmean(mean_error_perAngle.(block{j})(:,1:2:end),2)),'Color', [0.0 0.667 1.0],'LineWidth',2)       
+        plot(trials2plot{j}, smooth(nanmean(mean_error_perAngle.(block{j})(:,2:2:end),2)),'Color', [1.0 0.667 0.0],'LineWidth',2)
+    end
+    plot([trials2plot{1}(end) trials2plot{1}(end) ],vert_limits2,'--k','LineWidth',0.5)
+    plot([trials2plot{2}(end) trials2plot{2}(end) ],vert_limits2,'--k','LineWidth',0.5)
+    plot([0 trials2plot{3}(end)],[0 0],'--k','LineWidth',0.5)
+    xlabel('Trials')
+    ylabel(['Angle Error - ',block{j}])
+    ylim(vert_limits2)
+    title([analysis{1,1}.task_version])
+    if save_fig
+        saveas(gcf,[save_path filesep analysis{1,1}.task_version filesep 'meanerror_diagVScard_' analysis{1,1}.task_version ],'png')
+        saveas(gcf,[save_path filesep analysis{1,1}.task_version filesep 'meanerror_diagVScard_' analysis{1,1}.task_version ],'fig')
+    end
 end
 end
 
