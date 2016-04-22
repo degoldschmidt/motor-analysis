@@ -10,7 +10,7 @@ end
 %path_folder = 'C:\Users\Rodrigo\Documents\INDP2015\Motor Week\Data';
 analysis_folder = pwd;
 path_folder = ['..' filesep 'motor-data'];
-path_data = [path_folder filesep task_version, '_*.mat'];
+path_data = [path_folder filesep task_version, '*.mat']
 % Gets data files to analyze
 d = dir(path_data);
 str = {d.name};
