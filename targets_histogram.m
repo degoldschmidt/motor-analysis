@@ -47,7 +47,7 @@ handle = figure;
 [counts,centers] = hist(cattar,xbins1);
 bar(centers, counts/sum(counts));
 hold on;
-plot(-25:1:385, 0.1111:0.1111,'k--', 'LineWidth', 1.5);
+plot(-25:1:385, 0.1111:0.1111,'k--', 'LineWidth', 1.);
 hold off;
 title('All subjects, all parts','fontsize',18);
 xlabel('Target angle [ \circ ]','fontsize',18);
